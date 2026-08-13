@@ -10,6 +10,24 @@ if ($null -eq $Npm -or $null -eq $Npx) {
     throw 'npm.cmd and npx.cmd are required. Install Node.js before building.'
 }
 
+function Get-Sha256Hex {
+    param([Parameter(Mandatory = $true)][string]$LiteralPath)
+
+    $Algorithm = [System.Security.Cryptography.SHA256]::Create()
+    $Stream = [System.IO.File]::Open(
+        $LiteralPath,
+        [System.IO.FileMode]::Open,
+        [System.IO.FileAccess]::Read,
+        [System.IO.FileShare]::Read
+    )
+    try {
+        return ([System.BitConverter]::ToString($Algorithm.ComputeHash($Stream))).Replace('-', '')
+    } finally {
+        $Stream.Dispose()
+        $Algorithm.Dispose()
+    }
+}
+
 Push-Location $ProjectRoot
 try {
     & $Npm.Source run check
@@ -37,7 +55,7 @@ try {
     $ReleaseFiles = @($Artifacts) + @($SourceArchive)
 
     $ChecksumLines = foreach ($Artifact in $ReleaseFiles) {
-        $Hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $Artifact.FullName).Hash.ToLowerInvariant()
+        $Hash = (Get-Sha256Hex -LiteralPath $Artifact.FullName).ToLowerInvariant()
         "$Hash  $($Artifact.Name)"
     }
     Set-Content -LiteralPath (Join-Path $ProjectRoot 'dist\SHA256SUMS.txt') -Value $ChecksumLines -Encoding ASCII

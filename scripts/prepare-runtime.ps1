@@ -19,6 +19,24 @@ $BuildIcon = Join-Path $ProjectRoot 'build\deepseek-harness.svg'
 $RuntimeRoot = Join-Path $HarnessRoot 'runtime'
 $RuntimeNode = Join-Path $RuntimeRoot 'node.exe'
 
+function Get-Sha256Hex {
+    param([Parameter(Mandatory = $true)][string]$LiteralPath)
+
+    $Algorithm = [System.Security.Cryptography.SHA256]::Create()
+    $Stream = [System.IO.File]::Open(
+        $LiteralPath,
+        [System.IO.FileMode]::Open,
+        [System.IO.FileAccess]::Read,
+        [System.IO.FileShare]::Read
+    )
+    try {
+        return ([System.BitConverter]::ToString($Algorithm.ComputeHash($Stream))).Replace('-', '')
+    } finally {
+        $Stream.Dispose()
+        $Algorithm.Dispose()
+    }
+}
+
 if (-not (Test-Path -LiteralPath $HarnessManifest)) {
     throw "Harness manifest is missing: $HarnessManifest"
 }
@@ -101,7 +119,7 @@ if ($Force -or -not (Test-NodeRuntime)) {
             throw "The published Node.js checksum differs from the pinned release checksum. Pinned $PinnedNodeArchiveSha256, published $PublishedHash"
         }
 
-        $ActualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $ArchivePath).Hash.ToUpperInvariant()
+        $ActualHash = (Get-Sha256Hex -LiteralPath $ArchivePath).ToUpperInvariant()
         if ($ActualHash -ne $PinnedNodeArchiveSha256) {
             throw "Node.js checksum mismatch. Expected $PinnedNodeArchiveSha256, received $ActualHash"
         }

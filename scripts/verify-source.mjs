@@ -37,6 +37,17 @@ if (manifest.devDependencies?.electron !== '43.4.0') {
 if (harnessManifest.dependencies?.['@deepseek-ai/dsh'] !== '0.1.0-rc.6') {
   throw new Error('DeepSeek Harness must remain pinned to 0.1.0-rc.6 for this release.')
 }
+
+const expectedInstallScripts = {
+  '@deepseek-ai/dsh-subprocess-local@0.1.0-rc.6': true,
+  '@google/genai@1.52.0': true,
+  'koffi@3.1.4': true,
+  'node-pty@1.1.0': true,
+  'protobufjs@7.6.5': true,
+}
+if (JSON.stringify(harnessManifest.allowScripts) !== JSON.stringify(expectedInstallScripts)) {
+  throw new Error('The audited Harness install-script allowlist has changed.')
+}
 if (manifest.build?.win?.signExecutable !== false) {
   throw new Error('Unsigned community builds must explicitly set win.signExecutable=false.')
 }
