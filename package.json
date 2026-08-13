@@ -20,9 +20,9 @@
     "dev": "npm run setup && electron .",
     "check": "node --check main.js && node --check preload.js && node scripts/verify-source.mjs",
     "licenses": "node scripts/generate-third-party-notices.mjs",
-    "build:dir": "npm run setup && electron-builder --dir --win --x64",
-    "build:installer": "npm run setup && electron-builder --win nsis --x64",
-    "build:portable": "npm run setup && electron-builder --win portable --x64",
+    "build:dir": "npm run setup && electron-builder --dir --win --x64 --publish never",
+    "build:installer": "npm run setup && electron-builder --win nsis --x64 --publish never",
+    "build:portable": "npm run setup && electron-builder --win portable --x64 --publish never",
     "build:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows.ps1"
   },
   "dependencies": {},

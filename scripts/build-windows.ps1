@@ -36,7 +36,7 @@ try {
     & $Npm.Source run setup
     if ($LASTEXITCODE -ne 0) { throw "Runtime setup failed with exit code $LASTEXITCODE" }
 
-    & $Npx.Source --no-install electron-builder --win nsis portable --x64
+    & $Npx.Source --no-install electron-builder --win nsis portable --x64 --publish never
     if ($LASTEXITCODE -ne 0) { throw "electron-builder failed with exit code $LASTEXITCODE" }
 
     & (Join-Path $PSScriptRoot 'package-source.ps1')
