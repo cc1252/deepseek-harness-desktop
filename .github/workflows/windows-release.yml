@@ -48,11 +48,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create $env:GITHUB_REF_NAME `
-            (Get-ChildItem dist/DeepSeek-Harness-Desktop-Setup-*-x64.exe).FullName `
-            (Get-ChildItem dist/DeepSeek-Harness-Desktop-Portable-*-x64.exe).FullName `
-            (Get-ChildItem dist/DeepSeek-Harness-Desktop-Source-*.zip).FullName `
-            dist/SHA256SUMS.txt `
-            --verify-tag `
-            --generate-notes `
-            --title "DeepSeek Harness Desktop $env:GITHUB_REF_NAME"
+          $assets = @(
+            (Get-ChildItem dist/DeepSeek-Harness-Desktop-Setup-*-x64.exe).FullName
+            (Get-ChildItem dist/DeepSeek-Harness-Desktop-Portable-*-x64.exe).FullName
+            (Get-ChildItem dist/DeepSeek-Harness-Desktop-Source-*.zip).FullName
+            (Resolve-Path dist/SHA256SUMS.txt).Path
+          )
+          gh release view $env:GITHUB_REF_NAME *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $env:GITHUB_REF_NAME @assets --clobber
+          } else {
+            gh release create $env:GITHUB_REF_NAME @assets `
+              --verify-tag `
+              --generate-notes `
+              --title "DeepSeek Harness Desktop $env:GITHUB_REF_NAME"
+          }
+          if ($LASTEXITCODE -ne 0) { throw "GitHub Release command failed with exit code $LASTEXITCODE" }
