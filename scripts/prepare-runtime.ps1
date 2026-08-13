@@ -7,6 +7,7 @@ $ErrorActionPreference = 'Stop'
 $NodeVersion = '24.19.0'
 $NodeArchiveName = "node-v$NodeVersion-win-x64.zip"
 $NodeReleaseBase = "https://nodejs.org/dist/v$NodeVersion"
+$PinnedNodeArchiveSha256 = '57F71AB3652E797D84ACDDC79C81CC9FF1C6DDB2A1974CDB83F00FEE9BFF4C73'
 $ProjectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $HarnessRoot = Join-Path $ProjectRoot 'harness'
 $HarnessManifest = Join-Path $HarnessRoot 'package.json'
@@ -95,10 +96,14 @@ if ($Force -or -not (Test-NodeRuntime)) {
             throw "No SHA-256 entry was found for $NodeArchiveName"
         }
 
-        $ExpectedHash = ([Regex]::Match($ChecksumLine, '^([0-9a-fA-F]{64})')).Groups[1].Value.ToUpperInvariant()
+        $PublishedHash = ([Regex]::Match($ChecksumLine, '^([0-9a-fA-F]{64})')).Groups[1].Value.ToUpperInvariant()
+        if ($PublishedHash -ne $PinnedNodeArchiveSha256) {
+            throw "The published Node.js checksum differs from the pinned release checksum. Pinned $PinnedNodeArchiveSha256, published $PublishedHash"
+        }
+
         $ActualHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $ArchivePath).Hash.ToUpperInvariant()
-        if ($ActualHash -ne $ExpectedHash) {
-            throw "Node.js checksum mismatch. Expected $ExpectedHash, received $ActualHash"
+        if ($ActualHash -ne $PinnedNodeArchiveSha256) {
+            throw "Node.js checksum mismatch. Expected $PinnedNodeArchiveSha256, received $ActualHash"
         }
 
         Write-Host "Verified Node.js archive SHA-256: $ActualHash"

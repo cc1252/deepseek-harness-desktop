@@ -35,7 +35,8 @@
 | electron-builder | `26.15.3` |
 
 版本被明确锁定在两个 `package-lock.json` 中。准备脚本从 Node.js 官方站点下载运行时，
-并在解压前根据官方 `SHASUMS256.txt` 验证 SHA-256。
+并在解压前同时比对仓库内固定值和官方 `SHASUMS256.txt`。当前 Windows x64 压缩包的
+SHA-256 为 `57F71AB3652E797D84ACDDC79C81CC9FF1C6DDB2A1974CDB83F00FEE9BFF4C73`。
 
 ## 从源码运行
 

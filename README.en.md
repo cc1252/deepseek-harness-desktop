@@ -50,8 +50,8 @@ npm run start
 
 `npm run setup` installs the pinned Harness dependency tree, downloads the
 official Node.js Windows runtime, verifies it against the official
-`SHASUMS256.txt`, extracts the upstream icon, and generates bundled dependency
-license notices.
+`SHASUMS256.txt` and a repository-pinned checksum, extracts the upstream icon,
+and generates bundled dependency license notices.
 
 ## Build Windows releases
 
