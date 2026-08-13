@@ -21,6 +21,9 @@ try {
     & $Npx.Source --no-install electron-builder --win nsis portable --x64
     if ($LASTEXITCODE -ne 0) { throw "electron-builder failed with exit code $LASTEXITCODE" }
 
+    & (Join-Path $PSScriptRoot 'package-source.ps1')
+    if ($LASTEXITCODE -ne 0) { throw "Source packaging failed with exit code $LASTEXITCODE" }
+
     $Artifacts = Get-ChildItem -LiteralPath (Join-Path $ProjectRoot 'dist') -Filter '*.exe' -File |
         Where-Object { $_.Name -match '^DeepSeek-Harness-Desktop-(Setup|Portable)-' } |
         Sort-Object Name
@@ -29,14 +32,18 @@ try {
         throw 'Expected both installer and portable Windows artifacts.'
     }
 
-    $ChecksumLines = foreach ($Artifact in $Artifacts) {
+    $Manifest = Get-Content -LiteralPath (Join-Path $ProjectRoot 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+    $SourceArchive = Get-Item -LiteralPath (Join-Path $ProjectRoot "dist\DeepSeek-Harness-Desktop-Source-$($Manifest.version).zip")
+    $ReleaseFiles = @($Artifacts) + @($SourceArchive)
+
+    $ChecksumLines = foreach ($Artifact in $ReleaseFiles) {
         $Hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $Artifact.FullName).Hash.ToLowerInvariant()
         "$Hash  $($Artifact.Name)"
     }
     Set-Content -LiteralPath (Join-Path $ProjectRoot 'dist\SHA256SUMS.txt') -Value $ChecksumLines -Encoding ASCII
 
     Write-Host 'Windows artifacts:'
-    $Artifacts | Select-Object Name, Length, LastWriteTime | Format-Table -AutoSize
+    $ReleaseFiles | Select-Object Name, Length, LastWriteTime | Format-Table -AutoSize
     Write-Host 'SHA-256 checksums written to dist\SHA256SUMS.txt.'
 } finally {
     Pop-Location

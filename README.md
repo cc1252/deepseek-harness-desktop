@@ -18,6 +18,7 @@
 
 - `DeepSeek-Harness-Desktop-Setup-0.1.0-x64.exe`：完整 Windows 安装包；
 - `DeepSeek-Harness-Desktop-Portable-0.1.0-x64.exe`：无需安装的便携单文件；
+- `DeepSeek-Harness-Desktop-Source-0.1.0.zip`：与发布对应的源码快照；
 - `SHA256SUMS.txt`：发布文件校验值；
 - GitHub 自动生成的源码归档。
 

@@ -39,6 +39,7 @@ jobs:
           path: |
             dist/DeepSeek-Harness-Desktop-Setup-*-x64.exe
             dist/DeepSeek-Harness-Desktop-Portable-*-x64.exe
+            dist/DeepSeek-Harness-Desktop-Source-*.zip
             dist/SHA256SUMS.txt
 
       - name: Create GitHub Release
@@ -50,6 +51,7 @@ jobs:
           gh release create $env:GITHUB_REF_NAME `
             (Get-ChildItem dist/DeepSeek-Harness-Desktop-Setup-*-x64.exe).FullName `
             (Get-ChildItem dist/DeepSeek-Harness-Desktop-Portable-*-x64.exe).FullName `
+            (Get-ChildItem dist/DeepSeek-Harness-Desktop-Source-*.zip).FullName `
             dist/SHA256SUMS.txt `
             --verify-tag `
             --generate-notes `

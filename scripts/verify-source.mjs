@@ -19,6 +19,7 @@ const requiredFiles = [
   'package.json',
   'preload.js',
   'scripts/build-windows.ps1',
+  'scripts/package-source.ps1',
   'scripts/prepare-runtime.ps1',
   'shell.html',
 ]

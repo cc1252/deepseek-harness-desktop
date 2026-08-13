@@ -21,7 +21,7 @@ the custom title bar.
 
 [GitHub Releases](https://github.com/cc1252/deepseek-harness-desktop/releases)
 contains the complete NSIS installer, a portable executable, SHA-256 checksums,
-and GitHub-generated source archives. Community builds are not commercially
+an explicit source snapshot, and GitHub-generated source archives. Community builds are not commercially
 code-signed, so Windows may display an unknown-publisher warning.
 The installer uses the standard per-user application directory to avoid legacy
 Windows path-length limits. Use the portable build when a custom location is
