@@ -1,0 +1,26 @@
+# Dependencies and bundled runtime
+node_modules/
+harness/node_modules/
+harness/runtime/
+/runtime/
+
+# Build and QA output
+dist/
+qa/
+build/THIRD_PARTY_LICENSES.txt
+
+# Local state and secrets
+.env
+.env.*
+!.env.example
+*.log
+*.pfx
+*.p12
+*.pem
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,9 @@
+{
+  "name": "deepseek-harness-desktop-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Unpruned runtime payload for the Electron wrapper",
+  "dependencies": {
+    "@deepseek-ai/dsh": "0.1.0-rc.6"
+  }
+}

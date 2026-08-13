@@ -1,0 +1,112 @@
+{
+  "name": "deepseek-harness-desktop",
+  "version": "0.1.0",
+  "description": "Unofficial Windows desktop wrapper for DeepSeek Harness",
+  "author": "DeepSeek Harness Desktop contributors",
+  "main": "main.js",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cc1252/deepseek-harness-desktop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cc1252/deepseek-harness-desktop/issues"
+  },
+  "homepage": "https://github.com/cc1252/deepseek-harness-desktop#readme",
+  "scripts": {
+    "setup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare-runtime.ps1",
+    "start": "electron .",
+    "dev": "npm run setup && electron .",
+    "check": "node --check main.js && node --check preload.js && node scripts/verify-source.mjs",
+    "licenses": "node scripts/generate-third-party-notices.mjs",
+    "build:dir": "npm run setup && electron-builder --dir --win --x64",
+    "build:installer": "npm run setup && electron-builder --win nsis --x64",
+    "build:portable": "npm run setup && electron-builder --win portable --x64",
+    "build:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows.ps1"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "43.4.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "ai.deepseek.harness.desktop.unofficial",
+    "productName": "DeepSeek Harness Desktop",
+    "artifactName": "DeepSeek-Harness-Desktop-${version}-${arch}.${ext}",
+    "asar": true,
+    "npmRebuild": false,
+    "compression": "normal",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "shell.html",
+      "build/deepseek-harness.svg",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "harness/runtime",
+        "to": "harness/runtime",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "harness/node_modules",
+        "to": "harness/node_modules",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "LICENSE",
+        "to": "licenses/WRAPPER-LICENSE.txt"
+      },
+      {
+        "from": "THIRD_PARTY_NOTICES.md",
+        "to": "licenses/THIRD_PARTY_NOTICES.md"
+      },
+      {
+        "from": "build/THIRD_PARTY_LICENSES.txt",
+        "to": "licenses/THIRD_PARTY_LICENSES.txt"
+      }
+    ],
+    "win": {
+      "icon": "build/deepseek-harness.svg",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "signExecutable": false
+    },
+    "nsis": {
+      "artifactName": "DeepSeek-Harness-Desktop-Setup-${version}-${arch}.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "DeepSeek Harness Desktop",
+      "uninstallDisplayName": "DeepSeek Harness Desktop (Unofficial)",
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "DeepSeek-Harness-Desktop-Portable-${version}-${arch}.${ext}"
+    }
+  }
+}
