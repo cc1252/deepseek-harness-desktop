@@ -4,7 +4,7 @@
   "private": true,
   "description": "Unpruned runtime payload for the Electron wrapper",
   "dependencies": {
-    "@deepseek-ai/dsh": "0.1.0-rc.6"
+    "@deepseek-ai/dsh": "0.1.0-rc.8"
   },
   "allowScripts": {
     "@deepseek-ai/dsh-subprocess-local@0.1.0-rc.6": true,
