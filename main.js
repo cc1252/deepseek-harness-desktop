@@ -18,6 +18,12 @@ const PRODUCT_NAME = 'DeepSeek Harness Desktop'
 const TITLE_BAR_HEIGHT = 42
 const STARTUP_TIMEOUT_MS = 90_000
 
+if (process.env.DSH_DESKTOP_QA_USER_DATA) {
+  const qaUserData = path.resolve(process.env.DSH_DESKTOP_QA_USER_DATA)
+  fs.mkdirSync(qaUserData, { recursive: true })
+  app.setPath('userData', qaUserData)
+}
+
 let mainWindow
 let harnessView
 let harnessProcess
@@ -33,9 +39,10 @@ function writeLog(message) {
   try {
     const logDirectory = dataPath('logs')
     fs.mkdirSync(logDirectory, { recursive: true })
+    const safeMessage = String(message).replace(/([?&]token=)[^&\s]+/gi, '$1[REDACTED]')
     fs.appendFileSync(
       path.join(logDirectory, 'desktop.log'),
-      `${new Date().toISOString()} ${message}\n`,
+      `${new Date().toISOString()} ${safeMessage}\n`,
       'utf8',
     )
   } catch {
@@ -82,7 +89,7 @@ function startHarness() {
     fs.mkdirSync(harnessHome, { recursive: true })
 
     writeLog(`Starting Harness from ${cliPath} with ${nodePath}`)
-    harnessProcess = spawn(nodePath, [cliPath, 'web', '--port', '0'], {
+    harnessProcess = spawn(nodePath, [cliPath, 'web', '--host', '127.0.0.1', '--port', '0', '--no-open'], {
       cwd: app.getPath('home'),
       env: {
         ...process.env,
@@ -103,19 +110,23 @@ function startHarness() {
       else resolve(url)
     }
 
+    const outputBuffers = { out: '', err: '' }
     const inspectOutput = (source, chunk) => {
-      const output = chunk
-        .toString('utf8')
+      const output = (outputBuffers[source] + chunk.toString('utf8'))
         .replace(/\x1B\[[0-?]*[ -/]*[@-~]/g, '')
+      const lines = output.split(/\r?\n/)
+      outputBuffers[source] = lines.pop().slice(-65_536)
 
-      for (const line of output.split(/\r?\n/)) {
-        if (line.trim()) writeLog(`[dsh:${source}] ${line}`)
-      }
+      for (const line of lines) {
+        if (!line.trim()) continue
+        writeLog(`[dsh:${source}] ${line}`)
 
-      const match = output.match(/https?:\/\/(?:127\.0\.0\.1|localhost):\d+/i)
-      if (match) {
-        harnessOrigin = new URL(match[0]).origin
-        finish(undefined, match[0])
+        const match = line.match(/https?:\/\/(?:127\.0\.0\.1|localhost):\d+(?:\/[^\s]*)?/i)
+        if (match && !settled) {
+          const url = new URL(match[0])
+          harnessOrigin = url.origin
+          finish(undefined, url.toString())
+        }
       }
     }
 

@@ -16,9 +16,9 @@
 
 在 [GitHub Releases](https://github.com/cc1252/deepseek-harness-desktop/releases) 中提供：
 
-- `DeepSeek-Harness-Desktop-Setup-0.1.0-x64.exe`：完整 Windows 安装包；
-- `DeepSeek-Harness-Desktop-Portable-0.1.0-x64.exe`：无需安装的便携单文件；
-- `DeepSeek-Harness-Desktop-Source-0.1.0.zip`：与发布对应的源码快照；
+- `DeepSeek-Harness-Desktop-Setup-<版本>-x64.exe`：完整 Windows 安装包；
+- `DeepSeek-Harness-Desktop-Portable-<版本>-x64.exe`：无需安装的便携单文件；
+- `DeepSeek-Harness-Desktop-Source-<版本>.zip`：与发布对应的源码快照；
 - `SHA256SUMS.txt`：发布文件校验值；
 - GitHub 自动生成的源码归档。
 
@@ -30,7 +30,7 @@
 
 | 组件 | 版本 |
 | --- | --- |
-| DeepSeek Harness (`@deepseek-ai/dsh`) | `0.1.0-rc.6` |
+| DeepSeek Harness (`@deepseek-ai/dsh`) | `0.1.7-rc.1` |
 | Electron | `43.4.0` |
 | 内置 Node.js | `24.19.0` |
 | electron-builder | `26.15.3` |

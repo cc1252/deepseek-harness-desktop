@@ -1,16 +1,16 @@
 {
   "name": "deepseek-harness-desktop-runtime",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Unpruned runtime payload for the Electron wrapper",
   "dependencies": {
-    "@deepseek-ai/dsh": "0.1.0-rc.6"
+    "@deepseek-ai/dsh": "0.1.7-rc.1"
   },
   "allowScripts": {
-    "@deepseek-ai/dsh-subprocess-local@0.1.0-rc.6": true,
+    "@deepseek-ai/dsh-subprocess-local@0.1.7-rc.1": true,
     "@google/genai@1.52.0": true,
-    "koffi@3.1.4": true,
-    "node-pty@1.1.0": true,
-    "protobufjs@7.6.5": true
+    "koffi@3.3.1": true,
+    "node-pty@1.2.0-beta.15": true,
+    "protobufjs@7.6.6": true
   }
 }

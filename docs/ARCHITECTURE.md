@@ -6,7 +6,7 @@ BrowserWindow (frameless shell)
 │  └─ preload.js -> narrow window-control IPC
 └─ WebContentsView
    └─ http://127.0.0.1:<random port> (official Harness UI)
-        └─ bundled node.exe runs @deepseek-ai/dsh web --port 0
+        └─ bundled node.exe runs @deepseek-ai/dsh web --host 127.0.0.1 --port 0 --no-open
 ```
 
 ## Why two renderers?
@@ -21,8 +21,9 @@ while keeping the native window controls responsive.
 1. Electron creates the hidden frameless shell and loads `shell.html`.
 2. The shell is shown with a lightweight startup view.
 3. The main process starts the pinned Node.js runtime with
-   `@deepseek-ai/dsh web --port 0`.
-4. It parses the loopback URL printed by Harness.
+   `@deepseek-ai/dsh web --host 127.0.0.1 --port 0 --no-open`.
+4. It loads the full loopback URL printed by Harness, including the access token,
+   while redacting the token from desktop logs.
 5. A sandboxed `WebContentsView` loads that URL and fills the area below the
    42-pixel title bar.
 

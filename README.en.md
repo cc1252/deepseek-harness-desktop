@@ -31,7 +31,7 @@ required.
 
 | Component | Version |
 | --- | --- |
-| `@deepseek-ai/dsh` | `0.1.0-rc.6` |
+| `@deepseek-ai/dsh` | `0.1.7-rc.1` |
 | Electron | `43.4.0` |
 | Bundled Node.js | `24.19.0` |
 | electron-builder | `26.15.3` |
